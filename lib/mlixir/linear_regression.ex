@@ -17,7 +17,7 @@ defmodule Mlixir.LinearRegression do
     x_padded = Shared.left_pad(x, 1)
     x_transposed = Nx.transpose(x_padded)
     first = Nx.LinAlg.invert(Nx.dot(x_transposed, x_padded))
-    second = Nx.dot(x_transposed, Shared.row_vector(y))
+    second = Nx.dot(x_transposed, y)
     Nx.dot(first, second)
   end
 
