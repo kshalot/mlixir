@@ -3,13 +3,15 @@ defmodule Mlixir.StochasticGradientDescent do
   Model representing stochastic gradient descent.
   """
 
+  import Nx.Defn
+
   @behaviour Mlixir.Model
 
-  import Nx.Defn
+  alias Mlixir.Shared
 
   @learning_rate 0.01
 
-  @epochs 1_000
+  @epochs 10_000
 
   @doc """
   Train the SGD model.
@@ -17,9 +19,11 @@ defmodule Mlixir.StochasticGradientDescent do
   Uses mean squared error by default.
   """
   @impl true
-  def fit(%Nx.Tensor{shape: {_, n_coef}} = x, y) do
+  def fit(x, y) do
+    x_padded = Shared.left_pad(x, 1)
+    {_, n_coef} = Nx.shape(x_padded)
     coefficients = Nx.broadcast(0, {n_coef})
-    Enum.reduce(0..@epochs, coefficients, fn _, acc -> gradient_step(acc, x, y) end)
+    Enum.reduce(0..@epochs, coefficients, fn _, acc -> gradient_step(acc, x_padded, y) end)
   end
 
   defnp gradient_step(coefficients, x, y) do

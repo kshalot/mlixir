@@ -3,11 +3,11 @@ defmodule Mlixir.LinearRegression do
   Model representing (univariate & multivariate) linear regression.
   """
 
+  import Nx.Defn
+
   @behaviour Mlixir.Model
 
   alias Mlixir.Shared
-
-  import Nx.Defn
 
   @doc """
   Train the regression model using the Ordinary Least Square method.
