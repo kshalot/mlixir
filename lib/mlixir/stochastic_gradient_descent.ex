@@ -23,7 +23,7 @@ defmodule Mlixir.StochasticGradientDescent do
     x_padded = Shared.left_pad(x, 1)
     {_, n_coef} = Nx.shape(x_padded)
     coefficients = Nx.broadcast(0, {n_coef})
-    coefficients_expr = transform(coefficients, & Nx.Defn.Expr.tensor(&1))
+    coefficients_expr = transform(coefficients, &Nx.Defn.Expr.tensor/1)
 
     transform(
       {coefficients_expr, x_padded, y},
@@ -46,7 +46,8 @@ defmodule Mlixir.StochasticGradientDescent do
   defnp mean_squared_error(y_pred, y) do
     {n_samples} = Nx.shape(y_pred)
 
-    y - y_pred
+    y
+    |> Nx.subtract(y_pred)
     |> Nx.power(2)
     |> Nx.sum()
     |> Nx.divide(n_samples)

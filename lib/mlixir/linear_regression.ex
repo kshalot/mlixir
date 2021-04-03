@@ -1,6 +1,6 @@
 defmodule Mlixir.LinearRegression do
   @moduledoc """
-  Model representing (univariate & multivariate) linear regression.
+  Model representing multivariate linear regression.
   """
 
   import Nx.Defn
