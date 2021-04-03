@@ -50,6 +50,6 @@ defmodule Mlixir.StochasticGradientDescent do
   """
   @impl true
   defn predict(model, x) do
-    Nx.dot(model, x)
+    Nx.dot(model, Shared.left_pad(x, 1))
   end
 end
