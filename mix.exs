@@ -20,7 +20,7 @@ defmodule Mlixir.MixProject do
   defp deps do
     [
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
-      {:nx, "~> 0.1.0-dev", github: "elixir-nx/nx", branch: "feat/add-matrix-inversion", sparse: "nx"}
+      {:nx, "~> 0.1.0-dev", github: "elixir-nx/nx", branch: "main", sparse: "nx"}
     ]
   end
 end
