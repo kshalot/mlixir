@@ -25,3 +25,6 @@ mlixir-*.tar
 
 # Temporary files for e.g. tests
 /tmp
+
+# MacOS
+.DS_Store
