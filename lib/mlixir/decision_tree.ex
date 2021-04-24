@@ -34,21 +34,18 @@ defmodule Mlixir.DecisionTree do
   """
   @impl true
   defn fit(x, y) do
-    transform(
-      {x, y},
-      fn {x, y} ->
-        {_, n_classes} = Nx.shape(x)
-      end
-    )
-  end
+    split(x, y)
+   end
 
-  defnp split(x, y) do
-  end
-
-  defnp entropy(x) do
+  defnp entropy(half1, half2) do
+    # Calculate the entropy of a split.
   end
 
   defnp information_gain(x) do
+  end
+
+  defnp split(x, y) do
+    split_points = Nx.mean(x, axes: [1])
   end
 
   @doc """
