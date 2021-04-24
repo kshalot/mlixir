@@ -22,8 +22,8 @@ defmodule Mlixir.StochasticGradientDescent do
     coefficients_expr = transform(coefficients, &Nx.Defn.Expr.tensor/1)
 
     transform(
-      {coefficients_expr, x_padded, y},
-      fn {coefficients_expr, x_padded, y} ->
+      {x_padded, y, coefficients_expr},
+      fn {x_padded, y, coefficients_expr} ->
         Enum.reduce(
           0..epochs,
           coefficients_expr,
