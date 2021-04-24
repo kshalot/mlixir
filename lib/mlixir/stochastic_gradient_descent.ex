@@ -15,15 +15,15 @@ defmodule Mlixir.StochasticGradientDescent do
   Uses mean squared error by default.
   """
   @impl true
-  defn fit(x, y, epochs, learning_rate) do
+  defn fit(x, y, epochs \\ 1_000, learning_rate \\ 0.1) do
     x_padded = Shared.left_pad(x, 1)
     {_, n_coef} = Nx.shape(x_padded)
     coefficients = Nx.broadcast(0, {n_coef})
     coefficients_expr = transform(coefficients, &Nx.Defn.Expr.tensor/1)
 
     transform(
-      {x_padded, y, coefficients_expr, epochs},
-      fn {x_padded, y, coefficients_expr, epochs} ->
+      {x_padded, y, coefficients_expr, epochs, learning_rate},
+      fn {x_padded, y, coefficients_expr, epochs, learning_rate} ->
         Enum.reduce(
           0..epochs,
           coefficients_expr,
