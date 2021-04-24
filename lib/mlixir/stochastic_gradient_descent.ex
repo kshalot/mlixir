@@ -9,17 +9,13 @@ defmodule Mlixir.StochasticGradientDescent do
 
   alias Mlixir.Shared
 
-  @learning_rate 0.01
-
-  @epochs 10_000
-
   @doc """
   Train the SGD model.
 
   Uses mean squared error by default.
   """
   @impl true
-  defn fit(x, y) do
+  defn fit(x, y, epochs, learning_rate) do
     x_padded = Shared.left_pad(x, 1)
     {_, n_coef} = Nx.shape(x_padded)
     coefficients = Nx.broadcast(0, {n_coef})
@@ -28,14 +24,18 @@ defmodule Mlixir.StochasticGradientDescent do
     transform(
       {coefficients_expr, x_padded, y},
       fn {coefficients_expr, x_padded, y} ->
-        Enum.reduce(0..@epochs, coefficients_expr, fn _, acc -> gradient_step(acc, x_padded, y) end)
+        Enum.reduce(
+          0..epochs,
+          coefficients_expr,
+          fn _, acc -> gradient_step(acc, x_padded, y, learning_rate) end
+        )
       end
     )
   end
 
-  defnp gradient_step(coefficients, x, y) do
+  defnp gradient_step(coefficients, x, y, learning_rate) do
     error = grad(coefficients, fn coeff -> loss(coeff, x, y) end)
-    coefficients - (error * @learning_rate)
+    coefficients - (error * learning_rate)
   end
 
   defnp loss(coefficients, x, y) do
