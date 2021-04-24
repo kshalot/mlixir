@@ -42,12 +42,7 @@ defmodule Mlixir.DecisionTree do
     )
   end
 
-  defnp split(x, y, attribute_mask) do
-    """
-    The attribute_mask is used to denote which attributes
-    were already used for splitting. 1 means that the attribute
-    was used, 0 that it's available for splitting.
-    """
+  defnp split(x, y) do
   end
 
   defnp entropy(x) do
