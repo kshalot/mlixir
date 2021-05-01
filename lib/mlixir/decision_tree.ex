@@ -7,8 +7,6 @@ defmodule Mlixir.DecisionTree do
 
   @behaviour Mlixir.Model
 
-  alias Mlixir.Shared
-
   @doc """
   Train the decision tree.
 
@@ -42,6 +40,7 @@ defmodule Mlixir.DecisionTree do
   end
 
   defnp information_gain(x) do
+    # Calculate information_gain of a split.
   end
 
   defnp split(x, y) do
@@ -57,7 +56,7 @@ defmodule Mlixir.DecisionTree do
   ((x @ F @ S) == D) @ C
   """
   @impl true
-  defn predict({f, s, d, c} = model, x) do
+  defn predict({f, s, d, c}, x) do
     x
     |> Nx.dot(f)
     |> Nx.dot(s)
