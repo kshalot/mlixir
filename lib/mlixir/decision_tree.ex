@@ -23,7 +23,7 @@ defmodule Mlixir.DecisionTree do
       -1: right
       0: not a child
 
-  D - tensor of shape {class_count} encoidng the number of
+  D - tensor of shape {class_count} encoding the number of
       "left" edges encountered during traversing up from the node
       to the root of the tree
 
