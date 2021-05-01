@@ -7,14 +7,12 @@ defmodule Mlixir.LinearRegression do
 
   @behaviour Mlixir.Model
 
-  alias Mlixir.Shared
-
   @doc """
   Train the regression model using the Ordinary Least Square method.
   """
   @impl true
   defn fit(x, y) do
-    x_padded = Shared.left_pad(x, 1)
+    x_padded = Mlixir.left_pad(x, 1)
     x_transposed = Nx.transpose(x_padded)
     first = Nx.LinAlg.invert(Nx.dot(x_transposed, x_padded))
     second = Nx.dot(x_transposed, y)
@@ -26,6 +24,6 @@ defmodule Mlixir.LinearRegression do
   """
   @impl true
   defn predict(model, x) do
-    Nx.dot(model, Shared.left_pad(x, 1))
+    Nx.dot(model, Mlixir.left_pad(x, 1))
   end
 end

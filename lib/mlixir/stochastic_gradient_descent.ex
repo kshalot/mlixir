@@ -7,8 +7,6 @@ defmodule Mlixir.StochasticGradientDescent do
 
   @behaviour Mlixir.Model
 
-  alias Mlixir.Shared
-
   @doc """
   Train the SGD model.
 
@@ -16,7 +14,7 @@ defmodule Mlixir.StochasticGradientDescent do
   """
   @impl true
   defn fit(x, y, epochs \\ 1_000, learning_rate \\ 0.1) do
-    x_padded = Shared.left_pad(x, 1)
+    x_padded = Mlixir.left_pad(x, 1)
     {_, n_coef} = Nx.shape(x_padded)
     coefficients = Nx.broadcast(0, {n_coef})
     coefficients_expr = transform(coefficients, &Nx.Defn.Expr.tensor/1)
@@ -58,6 +56,6 @@ defmodule Mlixir.StochasticGradientDescent do
   """
   @impl true
   defn predict(model, x) do
-    Nx.dot(model, Shared.left_pad(x, 1))
+    Nx.dot(model, Mlixir.left_pad(x, 1))
   end
 end
