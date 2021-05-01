@@ -35,8 +35,13 @@ defmodule Mlixir.DecisionTree do
     split(x, y)
    end
 
-  defnp entropy(half1, half2) do
-    # Calculate the entropy of a split.
+  defnp entropy(probabilities) do
+    # Calculates entropy of the given configuration.
+    # The arguments is a tensor of probabilities that classes belong in the outcome.
+    # It's shape then is the number of classes in the given problem.
+    probabilities
+    |> Nx.map(fn probability -> -probability * Nx.log(probability) end)
+    |> Nx.sum
   end
 
   defnp information_gain(x) do
