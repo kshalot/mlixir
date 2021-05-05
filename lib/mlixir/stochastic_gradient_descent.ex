@@ -16,7 +16,7 @@ defmodule Mlixir.StochasticGradientDescent do
   defn fit(x, y, epochs \\ 1_000, learning_rate \\ 0.1) do
     x_padded = Mlixir.left_pad(x, 1)
     {_, n_coef} = Nx.shape(x_padded)
-    coefficients = Nx.broadcast(0, {n_coef})
+    coefficients = Nx.broadcast(0.1, {n_coef})
     coefficients_expr = transform(coefficients, &Nx.Defn.Expr.tensor/1)
 
     transform(
@@ -32,23 +32,26 @@ defmodule Mlixir.StochasticGradientDescent do
   end
 
   defnp gradient_step(coefficients, x, y, learning_rate) do
-    error = grad(coefficients, fn coeff -> loss(coeff, x, y) end)
+    error = grad(coefficients, fn coeff -> hinge_loss(coeff, x, y) end)
     coefficients - (error * learning_rate)
   end
 
-  defnp loss(coefficients, x, y) do
+  defnp mean_squared_error(coefficients, x, y) do
     y_pred = Nx.dot(x, coefficients)
-    mean_squared_error(y_pred, y)
-  end
-
-  defnp mean_squared_error(y_pred, y) do
-    {n_samples} = Nx.shape(y_pred)
 
     y
     |> Nx.subtract(y_pred)
     |> Nx.power(2)
-    |> Nx.sum()
-    |> Nx.divide(n_samples)
+    |> Nx.mean()
+  end
+
+  defnp hinge_loss(coefficients, x, y) do
+    y_pred = Nx.dot(x, coefficients)
+    hinge = 1 - Nx.dot(y, y_pred)
+            |> Nx.max(0)
+            |> Nx.mean()
+
+    1/2 * Nx.LinAlg.norm(coefficients) + hinge
   end
 
   @doc """
@@ -56,6 +59,7 @@ defmodule Mlixir.StochasticGradientDescent do
   """
   @impl true
   defn predict(model, x) do
-    Nx.dot(model, Mlixir.left_pad(x, 1))
+    padded = Mlixir.left_pad(x, 1)
+    Nx.dot(model, padded)
   end
 end
