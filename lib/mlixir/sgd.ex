@@ -1,4 +1,4 @@
-defmodule Mlixir.StochasticGradientDescent do
+defmodule Mlixir.SGD do
   @moduledoc """
   Model representing stochastic gradient descent.
   """
