@@ -24,6 +24,6 @@ defmodule Mlixir.LinearRegression do
   """
   @impl true
   defn predict(model, x) do
-    Nx.dot(model, Mlixir.left_pad(x, 1))
+    Nx.dot(Mlixir.left_pad(x, 1), model)
   end
 end
