@@ -1,5 +1,5 @@
 samples = 1_000
-sample_length = 50
+sample_length = 10
 
 #TODO: Types
 x64 = Nx.random_uniform({samples, sample_length})
