@@ -1,4 +1,4 @@
-samples = 1_000
+samples = 10
 sample_length = 10
 
 #TODO: Types
@@ -15,11 +15,27 @@ defmodule Benchmark.SGD do
     Mlixir.SGD.fit(x, y)
     |> Mlixir.SGD.predict(x) #FIXME: Predicting the training set (shouldn't impact performance, but fix it later)
   end
+
+  @defn_compiler EXLA
+  def host(x, y), do: sgd(x, y)
 end
+
+Nx.Defn.aot(
+  Benchmark.SGD.AOT,
+  [
+    {:sgd_64, &Benchmark.SGD.sgd/2, [x64, y64]},
+    {:sgd_32, &Benchmark.SGD.sgd/2, [x32, y32]}
+  ],
+  compiler: EXLA
+)
 
 benches = %{
   "elixir f64" => fn -> Benchmark.SGD.sgd(x64, y64) end,
-  "elixir f32" => fn -> Benchmark.SGD.sgd(x32, y32) end
+  "elixir f32" => fn -> Benchmark.SGD.sgd(x32, y32) end,
+  "xla jit-cpu f64" => fn -> Benchmark.SGD.host(x64, y64) end,
+  "xla jit-cpu f32" => fn -> Benchmark.SGD.host(x32, y32) end,
+  "xla aot-cpu f64" => fn -> Benchmark.SGD.AOT.sgd_64(x64, y64) end,
+  "xla aot-cpu f32" => fn -> Benchmark.SGD.AOT.sgd_32(x32, y32) end
 }
 
 Benchee.run(

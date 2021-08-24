@@ -12,9 +12,8 @@ defmodule Mlixir.LinearRegression do
   """
   @impl true
   defn fit(x, y) do
-    x_padded = Mlixir.left_pad(x, 1)
-    x_transposed = Nx.transpose(x_padded)
-    first = Nx.LinAlg.invert(Nx.dot(x_transposed, x_padded))
+    x_transposed = Nx.transpose(x)
+    first = Nx.LinAlg.invert(Nx.dot(x_transposed, x))
     second = Nx.dot(x_transposed, y)
     Nx.dot(first, second)
   end
@@ -24,6 +23,7 @@ defmodule Mlixir.LinearRegression do
   """
   @impl true
   defn predict(model, x) do
-    Nx.dot(Mlixir.left_pad(x, 1), model)
+    #Nx.dot(Mlixir.left_pad(x, 1), model)
+    Nx.dot(x, model)
   end
 end
