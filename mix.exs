@@ -21,7 +21,7 @@ defmodule Mlixir.MixProject do
     [
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:benchee, "~> 1.0", only: :dev},
-      {:exla, "~> 0.1.0-dev", github: "elixir-nx/nx", sparse: "exla"},
+      # {:exla, "~> 0.1.0-dev", github: "elixir-nx/nx", sparse: "exla"},
       {:nx, "~> 0.1.0-dev", github: "elixir-nx/nx", sparse: "nx", override: true},
       {:scidata, "~> 0.1.1"},
     ]
