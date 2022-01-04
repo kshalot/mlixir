@@ -7,6 +7,6 @@
   "exla": {:git, "https://github.com/elixir-nx/nx.git", "24a7d2e4063c9edb1913c1d4f67f28346b2835ad", [sparse: "exla"]},
   "file_system": {:hex, :file_system, "0.2.10", "fb082005a9cd1711c05b5248710f8826b02d7d1784e7c3451f9c1231d4fc162d", [:mix], [], "hexpm", "41195edbfb562a593726eda3b3e8b103a309b733ad25f3d642ba49696bf715dc"},
   "jason": {:hex, :jason, "1.2.2", "ba43e3f2709fd1aa1dce90aaabfd039d000469c05c56f0b8e31978e03fa39052", [:mix], [{:decimal, "~> 1.0 or ~> 2.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "18a228f5f0058ee183f29f9eae0805c6e59d61c3b006760668d8d18ff0d12179"},
-  "nx": {:git, "https://github.com/elixir-nx/nx.git", "24a7d2e4063c9edb1913c1d4f67f28346b2835ad", [sparse: "nx"]},
+  "nx": {:git, "https://github.com/elixir-nx/nx.git", "1ec305fb424cd3a45bd431212b827c712d001f49", [sparse: "nx"]},
   "scidata": {:hex, :scidata, "0.1.1", "9cd4f5197dd602ac83ddf18c850220fa5e5a81a4fb3911cac01a2508ca4ce29d", [:mix], [], "hexpm", "e8f176dfdd08f122238214540291e33051ac82b2bee71262c7674fb6e3131be0"},
 }

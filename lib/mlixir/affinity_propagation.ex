@@ -5,9 +5,15 @@ defmodule Mlixir.AffinityPropagation do
 
   import Nx.Defn
 
-  @iterations 10
+  @iterations 200
 
-  @neg_inf -100000000
+  @inf 100_000_000
+
+  @neg_inf -@inf
+
+  @self_preference 0
+
+  @damping_factor 0.5
 
   @doc """
   Cluster the dataset using affinity propagation.
@@ -19,10 +25,15 @@ defmodule Mlixir.AffinityPropagation do
         {new_a, new_r} = propagate_matrices(a, r, s)
         {new_a, new_r, s, i - 1}
       end
+
+    final_a + final_r
   end
 
   defnp propagate_matrices(a, r, s) do
-    {propagate_availabilities(a, r), propagate_responsibilities(a, r, s)}
+    new_r = propagate_responsibilities(a, r, s)
+    new_a = propagate_availabilities(a, new_r)
+
+    {new_a, new_r}
   end
 
   defnp propagate_responsibilities(a, r, s) do
@@ -43,24 +54,26 @@ defmodule Mlixir.AffinityPropagation do
     |> Nx.reduce_max(axes: [1])
 
     max_matrix = Nx.broadcast(0.0, shape) + first_maxes
-    ones = Nx.broadcast(1, {n})
-    pred = Nx.broadcast(0, shape)
-    |> Nx.indexed_add(max_indices, ones)
+    max_matrix = Mlixir.scatter(max_matrix, max_indices, second_maxes)
 
-    max_matrix = pred
-    |> Nx.select(second_maxes, max_matrix)
-
-    new_val = s - max_matrix
-    r + new_val
+    res = s - max_matrix
+    (r * @damping_factor) + ((1 - @damping_factor) * res)
   end
 
-  defnp propagate_availabilities(a, _r) do
-    # TODO: Implement (k, k) indices case
-    a
-    # |> relu()
-    # |> Nx.sum(axes: [1]) # FIXME: current indices have to be skipped
-    # |> Nx.add(Nx.take_diagonal(r))
-    # |> reverse_relu()
+  defnp propagate_availabilities(a, r) do
+    temp = r
+    |> Mlixir.relu()
+    |> Mlixir.fill_diagonal(0)
+    |> Nx.sum(axes: [0])
+
+    res = temp
+    |> Nx.add(Nx.take_diagonal(r))
+    |> Nx.broadcast(Nx.shape(r))
+    |> Nx.subtract(Nx.clip(r, 0, @inf))
+    |> Mlixir.reverse_relu()
+    |> Mlixir.fill_diagonal(temp)
+
+    (a * @damping_factor) - ((1 - @damping_factor) * res)
   end
 
   defnp initialize_matrices(data) do
@@ -72,7 +85,7 @@ defmodule Mlixir.AffinityPropagation do
     {availability_matrix, responsibility_matrix, similarity_matrix}
   end
 
-  defnp initialize_similarities(data) do
+  defn initialize_similarities(data) do
     {n, dims} = Nx.shape(data)
     t1 = Nx.reshape(data, {1, n, dims})
     t2 = Nx.reshape(data, {n, 1, dims})
@@ -81,13 +94,6 @@ defmodule Mlixir.AffinityPropagation do
     |> Nx.power(2)
     |> Nx.sum(axes: [2])
     |> Nx.power(0.5)
-  end
-
-  defnp relu(t) do
-    Nx.select(t > 0, t, 0)
-  end
-
-  defnp reverse_relu(t) do
-    Nx.select(t > 0, 0, t)
+    |> Mlixir.fill_diagonal(@self_preference)
   end
 end

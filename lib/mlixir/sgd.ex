@@ -65,4 +65,14 @@ defmodule Mlixir.SGD do
   defn predict(model, x) do
     Nx.dot(Mlixir.left_pad(x, 1), model)
   end
+
+  defn init_params(n) do
+    Nx.broadcast(0.1, {n})
+  end
+
+  def train(x, y, n) do
+    for epoch <- 1..@epochs, reduce: init_params(n) do
+      params -> gradient_step(params, x, y, @learning_rate)
+    end
+  end
 end
