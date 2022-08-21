@@ -19,10 +19,11 @@ defmodule Mlixir.MixProject do
 
   defp deps do
     [
-      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
+      # {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:benchee, "~> 1.0", only: :dev},
       # {:exla, "~> 0.1.0-dev", github: "elixir-nx/nx", sparse: "exla"},
-      {:nx, "~> 0.1.0-dev", github: "elixir-nx/nx", sparse: "nx", override: true},
+      # {:nx, "~> 0.1.0-dev", github: "elixir-nx/nx", sparse: "nx", override: true},
+      {:nx, "~> 0.2"},
       {:scidata, "~> 0.1.1"},
     ]
   end

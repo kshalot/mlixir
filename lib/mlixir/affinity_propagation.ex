@@ -94,6 +94,7 @@ defmodule Mlixir.AffinityPropagation do
     |> Nx.power(2)
     |> Nx.sum(axes: [2])
     |> Nx.power(0.5)
+    |> Nx.multiply(-1)
     |> Mlixir.fill_diagonal(@self_preference)
   end
 end
