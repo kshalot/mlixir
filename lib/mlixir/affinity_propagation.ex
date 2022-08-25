@@ -39,11 +39,9 @@ defmodule Mlixir.AffinityPropagation do
   defnp propagate_responsibilities(a, r, s) do
     temp = a + s
 
-    max_local_indices = temp
-    |> Nx.argmax(axis: 1)
-    |> Nx.new_axis(1)
+    max_local_indices = Nx.argmax(temp, axis: 1)
     first_maxes = temp
-    |> Nx.take_along_axis(max_local_indices, axis: 1)
+    |> Nx.take_along_axis(Nx.new_axis(max_local_indices, 1), axis: 1)
 
     {n, _} = shape = Nx.shape(a)
     infinities = Nx.broadcast(@neg_inf, {n})
