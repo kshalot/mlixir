@@ -75,9 +75,11 @@ defmodule Mlixir.AffinityPropagation do
   end
 
   defnp initialize_matrices(data) do
+    %{type: type} = data
     {n, _} = Nx.shape(data)
-    availability_matrix = Nx.broadcast(0.0, {n, n})
-    responsibility_matrix = Nx.broadcast(0.0, {n, n})
+    zero = Nx.tensor(0.0, type: type)
+    availability_matrix = Nx.broadcast(zero, {n, n})
+    responsibility_matrix = Nx.broadcast(zero, {n, n})
     similarity_matrix = initialize_similarities(data)
 
     {availability_matrix, responsibility_matrix, similarity_matrix}
